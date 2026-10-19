@@ -372,12 +372,12 @@
               <div class="text-[11px] theme-muted-text uppercase tracking-wider">SSE Chunk Rehydrate</div>
             </div>
             <div>
-              <div class="text-base font-bold theme-main-text font-mono">28.4 MB</div>
-              <div class="text-[11px] theme-muted-text uppercase tracking-wider">Base RSS Footprint</div>
+              <div class="text-base font-bold theme-main-text font-mono">98.1%</div>
+              <div class="text-[11px] theme-muted-text uppercase tracking-wider">100k Recall (0 FP)</div>
             </div>
             <div>
-              <div class="text-base font-bold theme-main-text font-mono">14.2k+</div>
-              <div class="text-[11px] theme-muted-text uppercase tracking-wider">Req/s Throughput</div>
+              <div class="text-base font-bold theme-main-text font-mono">285 Tests</div>
+              <div class="text-[11px] theme-muted-text uppercase tracking-wider">Passing (Rust & Py)</div>
             </div>
           </div>
         </div>
@@ -399,7 +399,7 @@
             </span>
             <span class="flex items-center text-xs text-emerald-600 dark:text-emerald-400 code-font font-semibold">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-              135 Tests Passing
+              167 Tests Passing
             </span>
           </div>
 
@@ -482,7 +482,7 @@
         <span>PROJECT DEEP DIVE #1</span>
       </div>
       <h1 class="text-4xl font-extrabold theme-main-text mb-3">
-        IronWarden <span class="text-cyan-600 dark:text-cyan-400 font-mono text-2xl font-normal">v1.1.0</span>
+        IronWarden <span class="text-cyan-600 dark:text-cyan-400 font-mono text-2xl font-normal">v1.1.1</span>
       </h1>
       <p class="text-lg theme-secondary-text max-w-3xl">
         Ultra-low latency sovereign AI reverse proxy and streaming PII firewall written in bare-metal Rust. Designed to protect regulated infrastructure against data leakage under the EU AI Act and GDPR.
@@ -545,19 +545,28 @@
 
     </div>
 
-    <!-- Benchmark Comparison Table -->
-    <div class="theme-card border rounded-xl p-6 mb-12 shadow-sm overflow-hidden">
+    <!-- ========================================================================= -->
+    <!-- BENCHMARKS & EVALUATION MATRICES (CRITERION & EMPIRICAL 100K SCORECARD) -->
+    <!-- ========================================================================= -->
+
+    <!-- Card 1: Hardware-Isolated Micro-Benchmarks (Criterion.rs) -->
+    <div class="theme-card border rounded-xl p-6 mb-8 shadow-sm overflow-hidden">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
-          <h3 class="text-lg font-bold theme-main-text">
-            Comparative Benchmark Matrix
-          </h3>
-          <p class="text-xs theme-secondary-text mt-0.5">
-            Measured with Criterion.rs (1,000+ samples, 95% CI). Isolated micro-benchmarks with zero-copy deserialization.
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-800 font-semibold">
+              CRITERION.RS HARNESS
+            </span>
+            <h3 class="text-lg font-bold theme-main-text">
+              Hardware-Isolated Micro-Benchmarks
+            </h3>
+          </div>
+          <p class="text-xs theme-secondary-text mt-1 leading-relaxed">
+            Measured on AMD Ryzen 7 5700X3D (8C/16T, 96MB L3 V-Cache), Linux 6.6 WSL2. 100 samples, 1,000+ iterations per sample, 95% Confidence Interval. Zero-copy deserialization & SIMD acceleration.
           </p>
         </div>
-        <a href="https://github.com/Somnerd/IronWarden/blob/main/BENCHMARKS.md" target="_blank" class="inline-flex items-center space-x-1 text-xs font-mono text-cyan-600 dark:text-cyan-400 hover:underline">
-          <span>View Methodology & Code (BENCHMARKS.md)</span>
+        <a href="https://github.com/Somnerd/IronWarden/tree/dev/benchmarks/raw/criterion_estimates.json" target="_blank" class="inline-flex items-center space-x-1 text-xs font-mono text-cyan-600 dark:text-cyan-400 hover:underline flex-shrink-0">
+          <span>Raw Estimates (criterion_estimates.json)</span>
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
         </a>
       </div>
@@ -565,48 +574,224 @@
         <table class="w-full text-left text-xs font-mono">
           <thead>
             <tr class="theme-table-head border-b">
-              <th class="py-3 px-4">Metric</th>
-              <th class="py-3 px-4 text-cyan-700 dark:text-cyan-300 font-bold bg-cyan-100/50 dark:bg-cyan-950/30">IronWarden (Rust)</th>
-              <th class="py-3 px-4">Kong AI Gateway (Lua/Go)</th>
-              <th class="py-3 px-4">LiteLLM (Python)</th>
-              <th class="py-3 px-4">Portkey (Node.js)</th>
+              <th class="py-3 px-4">Pipeline Stage / Operation</th>
+              <th class="py-3 px-4 text-cyan-700 dark:text-cyan-300 font-bold bg-cyan-100/50 dark:bg-cyan-950/30">Median Latency</th>
+              <th class="py-3 px-4">95% Confidence Interval</th>
+              <th class="py-3 px-4">Effective Throughput</th>
+              <th class="py-3 px-4">Execution Profile</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200 dark:divide-slate-800/60 theme-table-text">
             <tr>
-              <td class="py-3 px-4 font-semibold theme-main-text">P95 Routing Overhead</td>
-              <td class="py-3 px-4 theme-table-highlight font-bold">&lt;1 µs (&lt;1.8 ms P95 pipeline)</td>
-              <td class="py-3 px-4">3.4 ms</td>
-              <td class="py-3 px-4">18.5 ms</td>
-              <td class="py-3 px-4">12.2 ms</td>
+              <td class="py-3 px-4 font-semibold theme-main-text">SSE Rehydration (no tokens)</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">503.2 ns</td>
+              <td class="py-3 px-4">502.3 ns &ndash; 503.9 ns</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">&gt;1.98M chunks/s</td>
+              <td class="py-3 px-4 theme-secondary-text">Zero-copy ring buffer sliding window pass-through</td>
             </tr>
             <tr>
-              <td class="py-3 px-4 font-semibold theme-main-text">Memory Footprint</td>
-              <td class="py-3 px-4 theme-table-highlight font-bold">~28.4 MB RSS (Heuristic)</td>
-              <td class="py-3 px-4">~85 MB - 250 MB</td>
-              <td class="py-3 px-4">~140 MB</td>
-              <td class="py-3 px-4">~110 MB</td>
+              <td class="py-3 px-4 font-semibold theme-main-text">SSE Rehydration (complete token)</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">579.4 ns</td>
+              <td class="py-3 px-4">578.2 ns &ndash; 580.4 ns</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">&gt;1.72M chunks/s</td>
+              <td class="py-3 px-4 theme-secondary-text">Immediate token emission with zero-allocation slicing</td>
             </tr>
             <tr>
-              <td class="py-3 px-4 font-semibold theme-main-text">Max Concurrency (1 Core)</td>
-              <td class="py-3 px-4 theme-table-highlight font-bold">14,200+ req/s</td>
-              <td class="py-3 px-4">~24,000 req/s</td>
-              <td class="py-3 px-4">~2,200 req/s</td>
-              <td class="py-3 px-4">~4,800 req/s</td>
+              <td class="py-3 px-4 font-semibold theme-main-text">SSE Rehydration (split token across chunks)</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">821.8 ns</td>
+              <td class="py-3 px-4">820.2 ns &ndash; 823.2 ns</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">&gt;1.21M chunks/s</td>
+              <td class="py-3 px-4 theme-secondary-text">Cross-chunk sliding window buffer reassembly & redaction</td>
             </tr>
             <tr>
-              <td class="py-3 px-4 font-semibold theme-main-text">Streaming PII Redaction</td>
-              <td class="py-3 px-4 theme-table-highlight font-bold">Sliding Window (Line-Rate)</td>
-              <td class="py-3 px-4">Lua regex / buffer pauses</td>
-              <td class="py-3 px-4">Buffers entire stream</td>
-              <td class="py-3 px-4">Post-hoc or buffer</td>
+              <td class="py-3 px-4 font-semibold theme-main-text">AES-256-GCM Hardware Decryption</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">772.8 ns</td>
+              <td class="py-3 px-4">770.9 ns &ndash; 774.7 ns</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">&gt;1.29M ops/s</td>
+              <td class="py-3 px-4 theme-secondary-text">Hardware AES-NI authenticated decryption with AAD</td>
             </tr>
             <tr>
-              <td class="py-3 px-4 font-semibold theme-main-text">Audit Trail Security</td>
-              <td class="py-3 px-4 theme-table-highlight font-bold">HMAC-SHA256 Merkle Chain</td>
-              <td class="py-3 px-4">Standard Syslog/HTTP</td>
-              <td class="py-3 px-4">Plain Text JSON</td>
-              <td class="py-3 px-4">SaaS Cloud Dashboard</td>
+              <td class="py-3 px-4 font-semibold theme-main-text">AES-256-GCM Hardware Encryption</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">807.4 ns</td>
+              <td class="py-3 px-4">805.7 ns &ndash; 809.6 ns</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">&gt;1.23M ops/s</td>
+              <td class="py-3 px-4 theme-secondary-text">Hardware AES-NI authenticated envelope generation</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Token Restoration (Aho-Corasick SIMD)</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">126.0 µs</td>
+              <td class="py-3 px-4">125.6 µs &ndash; 126.5 µs</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">~7,936 req/s</td>
+              <td class="py-3 px-4 theme-secondary-text">3.35x faster than regex (422.9 µs) via SIMD matching</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">ShadowNER Context Boundary Scan</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">1.01 µs</td>
+              <td class="py-3 px-4">1.01 µs &ndash; 1.03 µs</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">~987k scans/s</td>
+              <td class="py-3 px-4 theme-secondary-text">Zero-allocation heuristic boundary filter over 60+ entities</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Lock-Free Metric Recording</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">1.77 ns</td>
+              <td class="py-3 px-4">1.76 ns &ndash; 1.77 ns</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">&gt;560M ops/s</td>
+              <td class="py-3 px-4 theme-secondary-text">Non-blocking atomic u64 ring buffer counters</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Prometheus Scrape Exposition Render</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">292.8 ns</td>
+              <td class="py-3 px-4">292.2 ns &ndash; 293.7 ns</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">&gt;3.41M scrapes/s</td>
+              <td class="py-3 px-4 theme-secondary-text">Stack-buffered exposition text formatter</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Card 2: Empirical Multilingual & Adversarial Detection Accuracy Scorecard -->
+    <div class="theme-card border rounded-xl p-6 mb-8 shadow-sm overflow-hidden">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 font-semibold">
+              EMPIRICAL EVALUATION
+            </span>
+            <h3 class="text-lg font-bold theme-main-text">
+              Multilingual & Adversarial Detection Accuracy Scorecard
+            </h3>
+          </div>
+          <p class="text-xs theme-secondary-text mt-1 leading-relaxed">
+            Evaluated with the dedicated <code class="text-cyan-600 dark:text-cyan-400">iw-accuracy-suite</code> across 100,000 synthetic multilingual prompts, standard academic NER benchmarks (CoNLL-2003, WikiGold), and the Eval 5 Adversarial Suite.
+          </p>
+        </div>
+        <a href="https://github.com/Somnerd/IronWarden/tree/dev/benchmarks/raw/accuracy_eval_results.json" target="_blank" class="inline-flex items-center space-x-1 text-xs font-mono text-cyan-600 dark:text-cyan-400 hover:underline flex-shrink-0">
+          <span>Raw Scorecard (accuracy_eval_results.json)</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <thead>
+            <tr class="theme-table-head border-b">
+              <th class="py-3 px-4">Evaluation Suite</th>
+              <th class="py-3 px-4">Samples / Entities</th>
+              <th class="py-3 px-4 text-cyan-700 dark:text-cyan-300 font-bold bg-cyan-100/50 dark:bg-cyan-950/30">Overall Recall</th>
+              <th class="py-3 px-4">Precision</th>
+              <th class="py-3 px-4">False Positives</th>
+              <th class="py-3 px-4">Key Validated Properties</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 dark:divide-slate-800/60 theme-table-text">
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">100k Multilingual Matrix</td>
+              <td class="py-3 px-4">100,000 prompts</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">98.13% (98,127 / 100,000)</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">100.0%</td>
+              <td class="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">0 FP</td>
+              <td class="py-3 px-4 theme-secondary-text">Zero over-scrubbing on Python, SQL, JSON, and Markdown syntax</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">CoNLL-2003 Test Split</td>
+              <td class="py-3 px-4">1,025 sents (1,617 gold)</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">94.62% (Hybrid) / 66.54% (Heuristic)</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">100.0%</td>
+              <td class="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">0 FP</td>
+              <td class="py-3 px-4 theme-secondary-text">F1: 0.972 (Hybrid ONNX) vs 0.799 (Heuristic); zero false alarms</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">WikiGold Test Split</td>
+              <td class="py-3 px-4">541 sents (934 gold)</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">92.18% (Hybrid) / 56.21% (Heuristic)</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">100.0%</td>
+              <td class="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">0 FP</td>
+              <td class="py-3 px-4 theme-secondary-text">F1: 0.959 (Hybrid ONNX) vs 0.720 (Heuristic); open-domain robustness</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Synthetic Structural Entities</td>
+              <td class="py-3 px-4">400 samples (4 classes)</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">100.0% (400 / 400)</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">100.0%</td>
+              <td class="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">0 FP</td>
+              <td class="py-3 px-4 theme-secondary-text">Deterministic masking for API keys, SSN, IBAN, and AFM with Luhn verification</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Eval 5 Adversarial Suite</td>
+              <td class="py-3 px-4">1,000 adversarial cases</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">100.0%</td>
+              <td class="py-3 px-4 text-emerald-600 dark:text-emerald-400 font-semibold">99.80%</td>
+              <td class="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">0 FP on code</td>
+              <td class="py-3 px-4 theme-secondary-text">Zero verb-eating ("patient hoyt complained"), Greek polytonic inflection, homoglyph defense</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Card 3: Architectural Paradigm Comparison -->
+    <div class="theme-card border rounded-xl p-6 mb-12 shadow-sm overflow-hidden">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-violet-100 dark:bg-violet-950 text-violet-800 dark:text-violet-300 border border-violet-300 dark:border-violet-800 font-semibold">
+              ENGINEERING MATRIX
+            </span>
+            <h3 class="text-lg font-bold theme-main-text">
+              Architectural Paradigm Comparison
+            </h3>
+          </div>
+          <p class="text-xs theme-secondary-text mt-1 leading-relaxed">
+            Concrete engineering design properties, memory models, and execution characteristics across enterprise AI gateway architectures.
+          </p>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <thead>
+            <tr class="theme-table-head border-b">
+              <th class="py-3 px-4">Architectural Dimension</th>
+              <th class="py-3 px-4 text-cyan-700 dark:text-cyan-300 font-bold bg-cyan-100/50 dark:bg-cyan-950/30">IronWarden (Bare-Metal Rust)</th>
+              <th class="py-3 px-4">Python Gateways (e.g. LiteLLM / FastAPI)</th>
+              <th class="py-3 px-4">Node.js Gateways (e.g. Portkey)</th>
+              <th class="py-3 px-4">Lua / OpenResty Gateways (e.g. Kong)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 dark:divide-slate-800/60 theme-table-text">
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Execution & Concurrency Model</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">Safe Rust & Tokio work-stealing multi-threading; non-blocking async I/O</td>
+              <td class="py-3 px-4">CPython with asyncio; Global Interpreter Lock (GIL) contention under CPU regex</td>
+              <td class="py-3 px-4">Single-threaded V8 event loop; libuv worker threads for crypto operations</td>
+              <td class="py-3 px-4">Nginx event-driven master/worker architecture with LuaJIT co-routines</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Memory Management & GC</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">RAII zero-cost abstractions; zero garbage collection pauses or jitter</td>
+              <td class="py-3 px-4">Generational mark-and-sweep GC; cyclic deallocation latency spikes</td>
+              <td class="py-3 px-4">V8 generational GC (Scavenge + Mark-Sweep-Compact) causing tail-latency spikes</td>
+              <td class="py-3 px-4">Incremental LuaJIT GC with fixed memory quotas per Nginx worker</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Streaming Token Redaction (SSE)</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">Sliding-window ring buffer inspects cross-chunk boundaries at line-rate (&lt;1 µs)</td>
+              <td class="py-3 px-4">Buffering full response before scanning, destroying Time-To-First-Token (TTFT)</td>
+              <td class="py-3 px-4">Full stream buffering or asynchronous dispatch to downstream cloud SaaS APIs</td>
+              <td class="py-3 px-4">Single-chunk regex matching with potential boundary misses or stream chunk buffering</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Audit Trail Integrity</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">Tamper-proof append-only SQLite WAL + HMAC-SHA256 Merkle chain with atomic .anchor</td>
+              <td class="py-3 px-4">Standard Python logging to stdout, local rotating text files, or Elasticsearch</td>
+              <td class="py-3 px-4">Proprietary cloud SaaS dashboard ingestion or stdout JSON logging</td>
+              <td class="py-3 px-4">Standard Nginx access logs, Syslog, OpenTelemetry, or commercial cloud plugins</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold theme-main-text">Binary Footprint & Dependencies</td>
+              <td class="py-3 px-4 theme-table-highlight font-bold">Single self-contained static binary (&lt;45 MB); zero external runtime dependencies</td>
+              <td class="py-3 px-4">Python runtime, virtualenv, and compiled C-extension packages (~150 MB+)</td>
+              <td class="py-3 px-4">Node.js V8 runtime environment plus deep node_modules dependency tree (~120 MB+)</td>
+              <td class="py-3 px-4">OpenResty/Nginx binary distribution plus Lua rocks and shared C libs (~90 MB+)</td>
             </tr>
           </tbody>
         </table>
@@ -791,7 +976,7 @@
     <div class="flex items-center justify-between p-6 theme-repo-bar border rounded-xl shadow-sm">
       <div>
         <div class="text-sm font-bold theme-main-text">Explore SearchBoost on GitHub</div>
-        <div class="text-xs theme-secondary-text">Open source under the MIT License. 135 automated tests passing.</div>
+        <div class="text-xs theme-secondary-text">Open source under the MIT License. 167 automated tests passing across 4 tiers.</div>
       </div>
       <a href="https://github.com/Somnerd/SearchBoost" target="_blank" class="px-5 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs transition-all shadow-md">
         View SearchBoost on GitHub →
